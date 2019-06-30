@@ -6,21 +6,28 @@
 
 namespace metric {
 
-
 /* @{ Base Types */
+template <typename T>
+struct is_distance : std::false_type {};
+
 template <typename Repr, typename Ratio = std::ratio<1>>
 struct distance {
+  static_assert(!is_distance<Repr>::value, "A distance representation can not be distance");
+  static_assert(std::__is_ratio<Ratio>::value, "Second template parameter of distance must be std::ratio");
+  static_assert(Ratio::num > 0, "distance ratio must be positive");
+
   using repr = Repr;
   using ratio = Ratio;
+
   constexpr distance() noexcept = default;
 
   distance(const distance&) = default;
 
-  template <class Repr2, typename = std::enable_if_t<std::is_convertible_v<Repr, Repr2>>>
-  constexpr explicit distance(const Repr2& r) : distance(r) {};
-
-  template <class Repr2, class Ratio2>
-  constexpr distance(const distance<Repr2, Ratio2>& d);
+  template <class Repr2, typename = std::enable_if_t<
+    std::is_convertible_v<Repr2, Repr> &&
+    (std::is_floating_point_v<Repr> || !std::is_floating_point_v<Repr2>)
+  >>
+  inline constexpr explicit distance(const Repr2& r) : count_(r) {};
 
   explicit constexpr distance(Repr c) noexcept : count_(c) {}
 
@@ -29,23 +36,6 @@ struct distance {
 
   const Repr count_;
 };
-
-template <typename Repr> using nanometers  = distance<Repr, std::nano>;
-template <typename Repr> using micrometers = distance<Repr, std::micro>;
-template <typename Repr> using millimeters = distance<Repr, std::milli>;
-template <typename Repr> using centimeters = distance<Repr, std::centi>;
-template <typename Repr> using decimeters  = distance<Repr, std::deci>;
-template <typename Repr> using meters      = distance<Repr>;
-template <typename Repr> using kilometers  = distance<Repr, std::kilo>;
-template <typename Repr> using megameters  = distance<Repr, std::mega>;
-/* Base Types @} */
-
-/* @{ Arithmetic Operators */
-/* Arithmetic Operators @} */
-
-/* @{ Operators */
-template <typename T>
-struct is_distance : std::false_type {};
 
 template <typename Repr, typename Ratio>
 struct is_distance<distance<Repr, Ratio>> : std::true_type {};
@@ -59,6 +49,18 @@ struct is_distance<volatile distance<Repr, Ratio>> : std::true_type {};
 template <typename Repr, typename Ratio>
 struct is_distance<const volatile distance<Repr, Ratio>> : std::true_type {};
 
+template <typename Repr> using nanometers  = distance<Repr, std::nano>;
+template <typename Repr> using micrometers = distance<Repr, std::micro>;
+template <typename Repr> using millimeters = distance<Repr, std::milli>;
+template <typename Repr> using centimeters = distance<Repr, std::centi>;
+template <typename Repr> using decimeters  = distance<Repr, std::deci>;
+template <typename Repr> using meters      = distance<Repr>;
+template <typename Repr> using kilometers  = distance<Repr, std::kilo>;
+template <typename Repr> using megameters  = distance<Repr, std::mega>;
+/* Base Types @} */
+
+
+/* @{ Operators */
 }  // namespace chrono
 
 template <typename Repr1, typename Ratio1, typename Repr2, typename Ratio2>
@@ -114,6 +116,144 @@ distance_cast(const distance<Repr, Ratio>& d) {
 }
 /* Operators @} */
 
+/* @{ Relational Operators */
+
+// distance ==
+
+template <typename LhsDistance, typename RhsDistance>
+struct __distance_eq {
+  inline constexpr bool operator()(const LhsDistance& lhs, const RhsDistance& rhs) const {
+    using CT = typename std::common_type<LhsDistance, RhsDistance>::type;
+    return distance_cast<CT>(lhs).count() == distance_cast<CT>(rhs).count();
+  }
+};
+
+template <typename Distance>
+struct __distance_eq<Distance, Distance> {
+  inline constexpr bool operator()(const Distance& lhs, const Distance& rhs) const {
+    return lhs.count() == rhs.count();
+  }
+};
+
+template <typename Repr1, typename Ratio1, typename Repr2, typename Ratio2>
+inline constexpr
+bool operator==(const distance<Repr1, Ratio1>& lhs, const distance<Repr2, Ratio2>& rhs) {
+  return __distance_eq<distance<Repr1, Ratio1>, distance<Repr2, Ratio2>>()(lhs, rhs);
+}
+
+// distance !=
+
+template <typename Repr1, typename Ratio1, typename Repr2, typename Ratio2>
+bool operator!=(const distance<Repr1, Ratio1>& lhs, const distance<Repr2, Ratio2>& rhs) {
+  return !__distance_eq<distance<Repr1, Ratio1>, distance<Repr2, Ratio2>>()(lhs, rhs);
+}
+
+// distance <
+
+template <typename LhsDistance, typename RhsDistance>
+struct __distance_lt {
+  inline constexpr bool operator()(const LhsDistance& lhs, const RhsDistance& rhs) const {
+    using CT = typename std::common_type<LhsDistance, RhsDistance>::type;
+    return distance_cast<CT>(lhs) < distance_cast<CT>(rhs);
+  }
+};
+
+template <typename Distance>
+struct __distance_lt<Distance, Distance> {
+  inline constexpr bool operator()(const Distance& lhs, const Distance& rhs) const {
+    return lhs.count() < rhs.count();
+  }
+};
+
+template <typename Repr1, typename Ratio1, typename Repr2, typename Ratio2>
+inline constexpr
+bool operator<(const distance<Repr1, Ratio1>& lhs, const distance<Repr2, Ratio2>& rhs) {
+  return __distance_lt<distance<Repr1, Ratio1>, distance<Repr2, Ratio2>>()(lhs, rhs);
+}
+
+// distance >
+
+template <typename Repr1, typename Ratio1, typename Repr2, typename Ratio2>
+inline constexpr
+bool operator>(const distance<Repr1, Ratio1>& lhs, const distance<Repr2, Ratio2>& rhs) {
+  return rhs < lhs;
+}
+
+
+// distance <=
+
+template <typename Repr1, typename Ratio1, typename Repr2, typename Ratio2>
+inline constexpr
+bool operator<=(const distance<Repr1, Ratio1>& lhs, const distance<Repr2, Ratio2>& rhs) {
+  return !(rhs < lhs);
+}
+
+// distance >=
+
+template <typename Repr1, typename Ratio1, typename Repr2, typename Ratio2>
+inline constexpr
+bool operator>=(const distance<Repr1, Ratio1>& lhs, const distance<Repr2, Ratio2>& rhs) {
+  return !(lhs < rhs);
+}
+
+/* Relational Operators @} */
+
+/* @{ Arithmetic Operators */
+
+// distance +
+
+template <typename Repr1, typename Ratio1, typename Repr2, typename Ratio2>
+inline constexpr
+typename std::common_type<distance<Repr1, Ratio1>, distance<Repr2, Ratio2>>::type
+operator +(const distance<Repr1, Ratio1>& lhs, const distance<Repr2, Ratio2>& rhs) {
+  using CD = typename std::common_type<distance<Repr1, Ratio1>, distance<Repr2, Ratio2>>::type;
+  return CD(distance_cast<CD>(lhs).count() + distance_cast<CD>(rhs).count());
+}
+
+// distance -
+
+template <typename Repr1, typename Ratio1, typename Repr2, typename Ratio2>
+inline constexpr
+typename std::common_type<distance<Repr1, Ratio1>, distance<Repr2, Ratio2>>::type
+operator -(const distance<Repr1, Ratio1>& lhs, const distance<Repr2, Ratio2>& rhs) {
+  using CD = typename std::common_type<distance<Repr1, Ratio1>, distance<Repr2, Ratio2>>::type;
+  return CD(distance_cast<CD>(lhs).count() - distance_cast<CD>(rhs).count());
+}
+
+// distance * (scalar)
+
+template <typename Repr1, typename Ratio1, typename Repr2>
+inline constexpr
+typename std::enable_if_t<
+  std::is_convertible_v<Repr2, typename std::common_type<Repr1, Repr2>::type>,
+  distance<typename std::common_type<Repr1, Repr2>::type, Ratio1>
+>
+operator *(const distance<Repr1, Ratio1>& d, const Repr2& s) {
+  using CR = typename std::common_type<Repr1, Repr2>::type;
+  using CD = distance<CR, Ratio1>;
+  return CD(distance_cast<CD>(d).count() * static_cast<CR>(s));
+}
+
+template <typename Repr1, typename Ratio1, typename Repr2>
+inline constexpr
+typename std::enable_if_t<
+  std::is_convertible_v<Repr2, typename std::common_type<Repr1, Repr2>::type>,
+  distance<typename std::common_type<Repr1, Repr2>::type, Ratio1>
+>
+operator *(const Repr2& s, const distance<Repr1, Ratio1>& d) {
+  using CR = typename std::common_type<Repr1, Repr2>::type;
+  using CD = distance<CR, Ratio1>;
+  return CD(distance_cast<CD>(d).count() * static_cast<CR>(s));
+}
+
+// distance /
+// TODO
+
+// distance %
+// TODO
+
+/* Arithmetic Operators @} */
+
 namespace literals {
 using ull = unsigned long long;
 using ld = long double;
@@ -140,6 +280,22 @@ inline constexpr metric::millimeters<ull> operator""_mm(ull v) {
 
 inline constexpr metric::millimeters<ld> operator""_mm(ld v) {
   return millimeters<ld>(v);
+}
+
+inline constexpr metric::decimeters<ull> operator""_dm(ull v) {
+  return decimeters<ull>(v);
+}
+
+inline constexpr metric::decimeters<ld> operator""_dm(ld v) {
+  return decimeters<ld>(v);
+}
+
+inline constexpr metric::centimeters<ull> operator""_cm(ull v) {
+  return centimeters<ull>(v);
+}
+
+inline constexpr metric::centimeters<ld> operator""_cm(ld v) {
+  return centimeters<ld>(v);
 }
 
 inline constexpr metric::meters<ull> operator""_m(ull v) {
