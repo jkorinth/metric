@@ -6,6 +6,12 @@
 
 namespace metric {
 
+#if __cplusplus > 201400
+#define _METRIC_CONSTEXPR_AFTER_CXX14 constexpr
+#else
+#define _METRIC_CONSTEXPR_AFTER_CXX14
+#endif
+
 /* @{ Base Types */
 template <typename T>
 struct is_distance : std::false_type {};
@@ -31,28 +37,16 @@ struct distance {
 
   explicit constexpr distance(Repr c) noexcept : count_(c) {}
 
-  inline
-#if __cplusplus >= 201400
-  constexpr
-#endif
+  inline _METRIC_CONSTEXPR_AFTER_CXX14
   distance& operator++()    { ++count_; return *this; };
 
-  inline
-#if __cplusplus >= 201400
-  constexpr
-#endif
+  inline _METRIC_CONSTEXPR_AFTER_CXX14
   distance operator++(int) { return distance(count_++); }
 
-  inline
-#if __cplusplus >= 201400
-  constexpr
-#endif
+  inline _METRIC_CONSTEXPR_AFTER_CXX14
   distance& operator--()    { --count_; return *this; }
 
-  inline
-#if __cplusplus >= 201400
-  constexpr
-#endif
+  inline _METRIC_CONSTEXPR_AFTER_CXX14
   distance operator--(int) { return distance(count_--); }
 
   // operator Repr() const noexcept { return count; }
