@@ -1,6 +1,8 @@
 #ifndef METRIC_METRIC_H_
 #define METRIC_METRIC_H_
 
+#include <cstdlib>
+#include <limits>
 #include <ostream>
 #include <ratio>
 #include <type_traits>
@@ -147,6 +149,17 @@ struct __distance_cast<FromDistance, ToDistance, Ratio, false, true> {
   }
 };
 
+template <class FromDistance, class ToDistance, class Ratio>
+struct __distance_cast<FromDistance, ToDistance, Ratio, false, false> {
+  inline constexpr ToDistance operator()(const FromDistance& fd) const {
+    using CT = typename std::common_type<typename ToDistance::repr,
+                                         typename FromDistance::repr,
+                                         intmax_t>::type;
+    return ToDistance(static_cast<typename ToDistance::repr>(
+          static_cast<CT>(fd.count()) * static_cast<CT>(Ratio::num)) / static_cast<CT>(Ratio::den));
+  }
+};
+
 }  // namespace
 
 template <class ToDistance, class Repr, class Ratio>
@@ -173,9 +186,14 @@ struct __distance_eq {
 template <typename Distance>
 struct __distance_eq<Distance, Distance> {
   inline constexpr bool operator()(const Distance& lhs, const Distance& rhs) const {
-    return lhs.count() == rhs.count();
+    return std::is_floating_point<typename Distance::repr>::value ?
+      (lhs.count() > rhs.count() ?
+        lhs.count() - rhs.count() <= std::numeric_limits<float>::epsilon() :
+        rhs.count() - lhs.count() <= std::numeric_limits<float>::epsilon()) :
+      lhs.count() == rhs.count();
   }
 };
+
 }  // namespace
 
 template <typename Repr1, typename Ratio1, typename Repr2, typename Ratio2>

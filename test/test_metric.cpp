@@ -85,3 +85,19 @@ TEST(MetricTest, arithmetic_int) {
   d4 %= 3_cm;
   EXPECT_EQ(d4, 1_cm);
 }
+
+template <typename Repr>
+using yards = metric::distance<Repr, std::ratio<1143, 1250>>;
+
+TEST(MetricTest, custom_units) {
+  auto d { yards<long double>(10.0) };  // the whole ten yards
+  auto m { distance_cast<meters<decltype(d)::repr>>(d) };
+  EXPECT_DOUBLE_EQ(m.count(), 9.144);
+  EXPECT_EQ(distance_cast<yards<long double>>(m), d);
+  EXPECT_EQ(d, d);
+
+  auto e { yards<float>(10.0) };
+  auto l { distance_cast<meters<decltype(e)::repr>>(e) };
+  EXPECT_EQ(e, e);
+  EXPECT_EQ(distance_cast<yards<decltype(e)::repr>>(l), e);
+}
