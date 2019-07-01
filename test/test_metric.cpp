@@ -56,4 +56,6 @@ TEST(MetricTest, arithmetic) {
   EXPECT_EQ(d2 - d1, d1);
   EXPECT_EQ(d2 + d2, d2 * 2);
   EXPECT_EQ(d2 + d2, 2 * d2);
+  EXPECT_EQ(d1 / 1ULL, d1);
+  EXPECT_EQ(d2 / d1, 2);
 }

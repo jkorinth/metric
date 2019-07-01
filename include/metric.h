@@ -247,7 +247,42 @@ operator *(const Repr2& s, const distance<Repr1, Ratio1>& d) {
 }
 
 // distance /
-// TODO
+
+template <typename Distance, typename Repr, bool = is_distance<Repr>::value>
+struct __distance_divide_result {};
+
+template <class Distance, class Repr2,
+          bool = std::is_convertible_v<Repr2,
+                                       typename std::common_type<typename Distance::repr, Repr2>::type>
+>
+struct __distance_divide_imp {};
+
+template <typename Repr1, typename Ratio, typename Repr2>
+struct __distance_divide_imp<distance<Repr1, Ratio>, Repr2, true> {
+  using type = distance<typename std::common_type<Repr1, Repr2>::type, Ratio>;
+};
+
+template <typename Repr1, typename Ratio, typename Repr2>
+struct __distance_divide_result<distance<Repr1, Ratio>, Repr2, false>
+  : __distance_divide_imp<distance<Repr1, Ratio>, Repr2> {};
+
+
+template <typename Repr1, typename Ratio, typename Repr2>
+inline constexpr
+typename __distance_divide_result<distance<Repr1, Ratio>, Repr2>::type
+operator /(const distance<Repr1, Ratio>& d, const Repr2 s) {
+  using CR = typename std::common_type<Repr1, Repr2>::type;
+  using CD = distance<CR, Ratio>;
+  return CD(distance_cast<CD>(d).count() / static_cast<CR>(s));
+}
+
+template <typename Repr1, typename Ratio1, typename Repr2, typename Ratio2>
+inline constexpr
+typename std::common_type<Repr1, Repr2>::type
+operator /(const distance<Repr1, Ratio1>& lhs, const distance<Repr2, Ratio2>& rhs) {
+  using CT = typename std::common_type<distance<Repr1, Ratio1>, distance<Repr2, Ratio2>>::type;
+  return distance_cast<CT>(lhs).count() / distance_cast<CT>(rhs).count();
+}
 
 // distance %
 // TODO
