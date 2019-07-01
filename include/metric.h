@@ -107,6 +107,7 @@ struct std::common_type<metric::distance<Repr1, Ratio1>, metric::distance<Repr2,
 };
 
 namespace metric {
+namespace {
 
 template <typename FromDistance, typename ToDistance,
           typename Ratio = typename std::ratio_divide<
@@ -146,6 +147,8 @@ struct __distance_cast<FromDistance, ToDistance, Ratio, false, true> {
   }
 };
 
+}  // namespace
+
 template <class ToDistance, class Repr, class Ratio>
 constexpr typename std::enable_if<is_distance<ToDistance>::value, ToDistance>::type
 distance_cast(const distance<Repr, Ratio>& d) {
@@ -156,6 +159,8 @@ distance_cast(const distance<Repr, Ratio>& d) {
 /* @{ Relational Operators */
 
 // distance ==
+
+namespace {
 
 template <typename LhsDistance, typename RhsDistance>
 struct __distance_eq {
@@ -171,6 +176,7 @@ struct __distance_eq<Distance, Distance> {
     return lhs.count() == rhs.count();
   }
 };
+}  // namespace
 
 template <typename Repr1, typename Ratio1, typename Repr2, typename Ratio2>
 inline constexpr
@@ -187,6 +193,8 @@ bool operator!=(const distance<Repr1, Ratio1>& lhs, const distance<Repr2, Ratio2
 
 // distance <
 
+namespace {
+
 template <typename LhsDistance, typename RhsDistance>
 struct __distance_lt {
   inline constexpr bool operator()(const LhsDistance& lhs, const RhsDistance& rhs) const {
@@ -201,6 +209,8 @@ struct __distance_lt<Distance, Distance> {
     return lhs.count() < rhs.count();
   }
 };
+
+}  // namespace
 
 template <typename Repr1, typename Ratio1, typename Repr2, typename Ratio2>
 inline constexpr
@@ -285,6 +295,7 @@ operator *(const Repr2& s, const distance<Repr1, Ratio1>& d) {
 
 // distance /
 
+namespace {
 template <typename Distance, typename Repr, bool = is_distance<Repr>::value>
 struct __distance_divide_result {};
 
@@ -303,7 +314,7 @@ struct __distance_divide_imp<distance<Repr1, Ratio>, Repr2, true> {
 template <typename Repr1, typename Ratio, typename Repr2>
 struct __distance_divide_result<distance<Repr1, Ratio>, Repr2, false>
   : __distance_divide_imp<distance<Repr1, Ratio>, Repr2> {};
-
+}  // namespace
 
 template <typename Repr1, typename Ratio, typename Repr2>
 inline constexpr
