@@ -1,6 +1,7 @@
 #ifndef METRIC_METRIC_H_
 #define METRIC_METRIC_H_
 
+#include <ostream>
 #include <ratio>
 #include <type_traits>
 
@@ -414,6 +415,62 @@ inline constexpr metric::megameters<ld> operator""_Mm(ld v) {
 }
 
 }  // namespace literals
+
+/* @{ std::ostream output operators */
+template <typename Repr, typename Ratio>
+std::ostream& operator <<(std::ostream& o, const distance<Repr, Ratio>& d) {
+  o << d.count() << " " << Ratio::num << "/" << Ratio::den << " m";
+  return o;
+}
+
+template <typename Repr>
+std::ostream& operator <<(std::ostream& o, const distance<Repr, std::nano>& d) {
+  o << d.count() << " nm";
+  return o;
+}
+
+template <typename Repr>
+std::ostream& operator <<(std::ostream& o, const distance<Repr, std::micro>& d) {
+  o << d.count() << " um";
+  return o;
+}
+
+template <typename Repr>
+std::ostream& operator <<(std::ostream& o, const distance<Repr, std::milli>& d) {
+  o << d.count() << " mm";
+  return o;
+}
+
+template <typename Repr>
+std::ostream& operator <<(std::ostream& o, const distance<Repr, std::centi>& d) {
+  o << d.count() << " cm";
+  return o;
+}
+
+template <typename Repr>
+std::ostream& operator <<(std::ostream& o, const distance<Repr, std::deci>& d) {
+  o << d.count() << " dm";
+  return o;
+}
+
+template <typename Repr>
+std::ostream& operator <<(std::ostream& o, const distance<Repr, std::ratio<1>>& d) {
+  o << d.count() << " m";
+  return o;
+}
+
+template <typename Repr>
+std::ostream& operator <<(std::ostream& o, const distance<Repr, std::kilo>& d) {
+  o << d.count() << " km";
+  return o;
+}
+
+template <typename Repr>
+std::ostream& operator <<(std::ostream& o, const distance<Repr, std::mega>& d) {
+  o << d.count() << " Mm";
+  return o;
+}
+/* std::ostream output operators @} */
 
 }  // namespace metric
 
