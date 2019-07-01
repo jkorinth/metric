@@ -20,7 +20,7 @@ add_subdirectory("${CMAKE_CURRENT_BINARY_DIR}/googletest-src"
 	"${CMAKE_CURRENT_BINARY_DIR}/googletest-build")
 
 add_executable(metric-test test_metric.cpp)
-target_compile_features(metric-test PUBLIC cxx_std_17)
+target_compile_features(metric-test PUBLIC cxx_std_11)
 target_include_directories(metric-test PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
 target_link_libraries(metric-test PRIVATE metric gtest gtest_main)
 

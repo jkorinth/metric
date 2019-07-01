@@ -23,10 +23,10 @@ struct distance {
 
   distance(const distance&) = default;
 
-  template <class Repr2, typename = std::enable_if_t<
-    std::is_convertible_v<Repr2, Repr> &&
-    (std::is_floating_point_v<Repr> || !std::is_floating_point_v<Repr2>)
-  >>
+  template <class Repr2, typename = typename std::enable_if<
+    std::is_convertible<Repr2, Repr>::value &&
+    (std::is_floating_point<Repr>::value || !std::is_floating_point<Repr2>::value)
+  >::type>
   inline constexpr explicit distance(const Repr2& r) : count_(r) {};
 
   explicit constexpr distance(Repr c) noexcept : count_(c) {}
@@ -110,7 +110,7 @@ struct __distance_cast<FromDistance, ToDistance, Ratio, false, true> {
 };
 
 template <class ToDistance, class Repr, class Ratio>
-constexpr std::enable_if_t<is_distance<ToDistance>::value, ToDistance>
+constexpr typename std::enable_if<is_distance<ToDistance>::value, ToDistance>::type
 distance_cast(const distance<Repr, Ratio>& d) {
   return __distance_cast<distance<Repr, Ratio>, ToDistance>()(d);
 }
@@ -224,10 +224,10 @@ operator -(const distance<Repr1, Ratio1>& lhs, const distance<Repr2, Ratio2>& rh
 
 template <typename Repr1, typename Ratio1, typename Repr2>
 inline constexpr
-typename std::enable_if_t<
-  std::is_convertible_v<Repr2, typename std::common_type<Repr1, Repr2>::type>,
+typename std::enable_if<
+  std::is_convertible<Repr2, typename std::common_type<Repr1, Repr2>::type>::value,
   distance<typename std::common_type<Repr1, Repr2>::type, Ratio1>
->
+>::type
 operator *(const distance<Repr1, Ratio1>& d, const Repr2& s) {
   using CR = typename std::common_type<Repr1, Repr2>::type;
   using CD = distance<CR, Ratio1>;
@@ -236,10 +236,10 @@ operator *(const distance<Repr1, Ratio1>& d, const Repr2& s) {
 
 template <typename Repr1, typename Ratio1, typename Repr2>
 inline constexpr
-typename std::enable_if_t<
-  std::is_convertible_v<Repr2, typename std::common_type<Repr1, Repr2>::type>,
+typename std::enable_if<
+  std::is_convertible<Repr2, typename std::common_type<Repr1, Repr2>::type>::value,
   distance<typename std::common_type<Repr1, Repr2>::type, Ratio1>
->
+>::type
 operator *(const Repr2& s, const distance<Repr1, Ratio1>& d) {
   using CR = typename std::common_type<Repr1, Repr2>::type;
   using CD = distance<CR, Ratio1>;
@@ -252,8 +252,9 @@ template <typename Distance, typename Repr, bool = is_distance<Repr>::value>
 struct __distance_divide_result {};
 
 template <class Distance, class Repr2,
-          bool = std::is_convertible_v<Repr2,
-                                       typename std::common_type<typename Distance::repr, Repr2>::type>
+          bool = std::is_convertible<Repr2,
+                                     typename std::common_type<typename Distance::repr, Repr2>::type
+                                    >::value
 >
 struct __distance_divide_imp {};
 
