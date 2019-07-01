@@ -51,6 +51,7 @@ TEST(MetricTest, arithmetic) {
   auto d1 { 1_cm };
   auto d2 { 0.02_m };
   auto d3 { centimeters<unsigned long long>(-1) };
+  auto d4 { 40_cm };
   EXPECT_EQ(d1 + d1, d2);
   EXPECT_EQ(d1 + d3, centimeters<unsigned long long>(0));
   EXPECT_EQ(d2 - d1, d1);
@@ -58,4 +59,6 @@ TEST(MetricTest, arithmetic) {
   EXPECT_EQ(d2 + d2, 2 * d2);
   EXPECT_EQ(d1 / 1ULL, d1);
   EXPECT_EQ(d2 / d1, 2);
+  EXPECT_EQ(d4 % 30_cm, 10_cm);
+  EXPECT_EQ(d4 % 30, 10_cm);
 }

@@ -286,7 +286,26 @@ operator /(const distance<Repr1, Ratio1>& lhs, const distance<Repr2, Ratio2>& rh
 }
 
 // distance %
-// TODO
+
+template <typename Repr1, typename Ratio, typename Repr2>
+inline constexpr
+typename __distance_divide_result<distance<Repr1, Ratio>, Repr2>::type
+operator %(const distance<Repr1, Ratio>& lhs, const Repr2& rhs) {
+  using CR = typename std::common_type<Repr1, Repr2>::type;
+  using CD = distance<CR, Ratio>;
+  return CD(distance_cast<CD>(lhs).count() % static_cast<CR>(rhs));
+}
+
+template <typename Repr1, typename Ratio1, typename Repr2, typename Ratio2>
+inline constexpr
+typename std::common_type<distance<Repr1, Ratio1>, distance<Repr2, Ratio2>>::type
+operator %(const distance<Repr1, Ratio1>& lhs, const distance<Repr2, Ratio2>& rhs) {
+  using CR = typename std::common_type<Repr1, Repr2>::type;
+  using CD = typename std::common_type<distance<Repr1, Ratio1>,
+                                       distance<Repr2, Ratio2>>::type;
+  return CD(static_cast<CR>(distance_cast<CD>(lhs).count()) %
+            static_cast<CR>(distance_cast<CD>(rhs).count()));
+}
 
 /* Arithmetic Operators @} */
 
