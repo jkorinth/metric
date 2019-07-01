@@ -47,7 +47,7 @@ TEST(MetricTest, relational) {
   EXPECT_TRUE(d1 >= d2);
 }
 
-TEST(MetricTest, arithmetic) {
+TEST(MetricTest, arithmetic_ext) {
   auto d1 { 1_cm };
   auto d2 { 0.02_m };
   auto d3 { centimeters<unsigned long long>(-1) };
@@ -61,9 +61,27 @@ TEST(MetricTest, arithmetic) {
   EXPECT_EQ(d2 / d1, 2);
   EXPECT_EQ(d4 % 30_cm, 10_cm);
   EXPECT_EQ(d4 % 30, 10_cm);
+}
+
+TEST(MetricTest, arithmetic_int) {
+  auto d1 { 1_cm  };
+  auto d2 { 0.02_m };
+  auto d4 { 40_cm };
   EXPECT_EQ(d4++, 40_cm);
   EXPECT_EQ(++d4, 42_cm);
   EXPECT_EQ(--d4, 41_cm);
   EXPECT_EQ(d4--, 41_cm);
   EXPECT_EQ(d4, 40_cm);
+  d4 += 3_cm;
+  EXPECT_EQ(d4, 43_cm);
+  d4 -= 3_cm;
+  EXPECT_EQ(d4, 40_cm);
+  d4 *= 3;
+  EXPECT_EQ(d4, 120_cm);
+  d4 /= 3;
+  EXPECT_EQ(d4, 40_cm);
+  d4 %= 30;
+  EXPECT_EQ(d4, 10_cm);
+  d4 %= 3_cm;
+  EXPECT_EQ(d4, 1_cm);
 }

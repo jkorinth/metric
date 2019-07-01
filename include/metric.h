@@ -49,6 +49,24 @@ struct distance {
   inline _METRIC_CONSTEXPR_AFTER_CXX14
   distance operator--(int) { return distance(count_--); }
 
+  inline _METRIC_CONSTEXPR_AFTER_CXX14
+  distance& operator +=(const distance& rhs) { count_ += rhs.count_; return *this; }
+
+  inline _METRIC_CONSTEXPR_AFTER_CXX14
+  distance& operator -=(const distance& rhs) { count_ -= rhs.count_; return *this; }
+
+  inline _METRIC_CONSTEXPR_AFTER_CXX14
+  distance& operator *=(const repr& s) { count_ *= s; return *this; }
+
+  inline _METRIC_CONSTEXPR_AFTER_CXX14
+  distance& operator /=(const repr& s) { count_ /= s; return *this; }
+
+  inline _METRIC_CONSTEXPR_AFTER_CXX14
+  distance& operator %=(const repr& s) { count_ %= s; return *this; }
+
+  inline _METRIC_CONSTEXPR_AFTER_CXX14
+  distance& operator %=(const distance& rhs) { count_ %= rhs.count_; return *this; }
+
   // operator Repr() const noexcept { return count; }
   inline Repr count() const noexcept { return count_; }
 
