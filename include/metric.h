@@ -31,10 +31,34 @@ struct distance {
 
   explicit constexpr distance(Repr c) noexcept : count_(c) {}
 
+  inline
+#if __cplusplus >= 201400
+  constexpr
+#endif
+  distance& operator++()    { ++count_; return *this; };
+
+  inline
+#if __cplusplus >= 201400
+  constexpr
+#endif
+  distance operator++(int) { return distance(count_++); }
+
+  inline
+#if __cplusplus >= 201400
+  constexpr
+#endif
+  distance& operator--()    { --count_; return *this; }
+
+  inline
+#if __cplusplus >= 201400
+  constexpr
+#endif
+  distance operator--(int) { return distance(count_--); }
+
   // operator Repr() const noexcept { return count; }
   inline Repr count() const noexcept { return count_; }
 
-  const Repr count_;
+  Repr count_;
 };
 
 template <typename Repr, typename Ratio>

@@ -61,4 +61,9 @@ TEST(MetricTest, arithmetic) {
   EXPECT_EQ(d2 / d1, 2);
   EXPECT_EQ(d4 % 30_cm, 10_cm);
   EXPECT_EQ(d4 % 30, 10_cm);
+  EXPECT_EQ(d4++, 40_cm);
+  EXPECT_EQ(++d4, 42_cm);
+  EXPECT_EQ(--d4, 41_cm);
+  EXPECT_EQ(d4--, 41_cm);
+  EXPECT_EQ(d4, 40_cm);
 }
