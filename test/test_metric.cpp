@@ -100,4 +100,7 @@ TEST(MetricTest, custom_units) {
   auto l { distance_cast<meters<decltype(e)::repr>>(e) };
   EXPECT_EQ(e, e);
   EXPECT_EQ(distance_cast<yards<decltype(e)::repr>>(l), e);
+  static_assert( distance_cast<yards<float>>(
+        distance_cast<meters<float>>(yards<float>(10.0))) ==
+      yards<float>(10.0), "distance_cast is invertible");
 }
