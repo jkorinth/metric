@@ -261,6 +261,7 @@ template <typename Repr> using megameters  = distance<Repr, std::mega>;
 /*! @{ Specialization of `std::common_type` for `distance`. **/
 template <typename Repr1, typename Ratio1, typename Repr2, typename Ratio2>
 struct std::common_type<metric::distance<Repr1, Ratio1>, metric::distance<Repr2, Ratio2>> {
+  /// Common type is built with greatest common divisor (GCD).
   using type = metric::distance<typename std::common_type<Repr1, Repr2>::type,
                                 typename __ratio_gcd<Ratio1, Ratio2>::type>;
 };
@@ -491,7 +492,7 @@ bool operator>=(const distance<Repr1, Ratio1>& lhs, const distance<Repr2, Ratio2
  * \tparam Ratio2 Unit value ratio type of RHS.
  * \param lhs Left-hand side of comparison.
  * \param rhs Right-hand side of comparison.
- * \return false, iff. distances are equal.
+ * \return New `distance` where length is LHS + RHS.
  **/
 template <typename Repr1, typename Ratio1, typename Repr2, typename Ratio2>
 inline constexpr
@@ -509,7 +510,7 @@ operator +(const distance<Repr1, Ratio1>& lhs, const distance<Repr2, Ratio2>& rh
  * \tparam Ratio2 Unit value ratio type of RHS.
  * \param lhs Left-hand side of comparison.
  * \param rhs Right-hand side of comparison.
- * \return false, iff. distances are equal.
+ * \return New `distance` of length LHS - RHS.
  **/
 template <typename Repr1, typename Ratio1, typename Repr2, typename Ratio2>
 inline constexpr
@@ -524,10 +525,9 @@ operator -(const distance<Repr1, Ratio1>& lhs, const distance<Repr2, Ratio2>& rh
  * \tparam Repr1 Unit value representative type of LHS.
  * \tparam Ratio1 Unit value ratio type of LHS.
  * \tparam Repr2 Unit value representative type of RHS.
- * \tparam Ratio2 Unit value ratio type of RHS.
- * \param lhs Left-hand side of comparison.
- * \param rhs Right-hand side of comparison.
- * \return false, iff. distances are equal.
+ * \param d Distance to multiply.
+ * \param s Scalar value to multiply by.
+ * \return New `distance` of length `d` * `s`.
  **/
 template <typename Repr1, typename Ratio1, typename Repr2>
 inline constexpr
@@ -547,9 +547,9 @@ operator *(const distance<Repr1, Ratio1>& d, const Repr2& s) {
  * \tparam Ratio1 Unit value ratio type of LHS.
  * \tparam Repr2 Unit value representative type of RHS.
  * \tparam Ratio2 Unit value ratio type of RHS.
- * \param lhs Left-hand side of comparison.
- * \param rhs Right-hand side of comparison.
- * \return false, iff. distances are equal.
+ * \param s Scalar value to multiply by.
+ * \param d Distance to multiply.
+ * \return New `distance` of length `d` * `s`.
  **/
 template <typename Repr1, typename Ratio1, typename Repr2>
 inline constexpr
@@ -592,8 +592,8 @@ struct __distance_divide_result<distance<Repr1, Ratio>, Repr2, false>
  * \tparam Ratio1 Unit value ratio type of LHS.
  * \tparam Repr2 Unit value representative type of RHS.
  * \tparam Ratio2 Unit value ratio type of RHS.
- * \param lhs Left-hand side of division.
- * \param rhs Right-hand side of division.
+ * \param d Distance to divide.
+ * \param s Scalar value to divide `d` by.
  * \return `distance` instance representing the divided lhs.
  **/
 template <typename Repr1, typename Ratio, typename Repr2>
@@ -665,13 +665,13 @@ operator %(const distance<Repr1, Ratio1>& lhs, const distance<Repr2, Ratio2>& rh
 
 /* arithmetic operators @} */
 
-/* @{ literal suffixes */
+/*  literal suffixes */
 
 /** \brief Provides literal suffixes for metric distance literals. **/
 namespace literals {
 
-using ull = unsigned long long;
-using ld = long double;
+using ull = unsigned long long;  ///< short-hand for `unsigned long long`
+using ld = long double;          ///< short-hand for `long double`
 
 /**
  * \brief Nanometers suffix with `unsigned long long` representative.
@@ -803,7 +803,7 @@ inline constexpr metric::megameters<ld> operator""_Mm(ld v) {
 
 }  // namespace literals
 
-/* literal suffixes @} */
+/* literal suffixes  */
 
 /* @{ stream operators */
 
