@@ -1,4 +1,4 @@
-metric - std::chrono-style distance units
+metric - std::chrono-style distance units {#mainpage}
 =========================================
 
 This header-only C++ library provides SI distance units (meters, millimeters,
