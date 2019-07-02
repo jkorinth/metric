@@ -283,7 +283,7 @@ template&lt;class ToDistance , class Repr , class Ratio &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>d In units of <code>ToDistance</code>. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d2/dbf/metric_8h_source.html#l00336">336</a> of file <a class="el" href="../../d2/dbf/metric_8h_source.html">metric.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d2/dbf/metric_8h_source.html#l00337">337</a> of file <a class="el" href="../../d2/dbf/metric_8h_source.html">metric.h</a>.</p>
 
 </div>
 </div>
@@ -334,7 +334,7 @@ template&lt;typename Repr1 , typename Ratio1 , typename Repr2 , typename Ratio2 
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>false, iff. distances are equal. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d2/dbf/metric_8h_source.html#l00394">394</a> of file <a class="el" href="../../d2/dbf/metric_8h_source.html">metric.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d2/dbf/metric_8h_source.html#l00395">395</a> of file <a class="el" href="../../d2/dbf/metric_8h_source.html">metric.h</a>.</p>
 
 </div>
 </div>
@@ -498,18 +498,17 @@ template&lt;typename Repr1 , typename Ratio1 , typename Repr2 &gt; </div>
     <tr><td class="paramname">Repr1</td><td>Unit value representative type of LHS. </td></tr>
     <tr><td class="paramname">Ratio1</td><td>Unit value ratio type of LHS. </td></tr>
     <tr><td class="paramname">Repr2</td><td>Unit value representative type of RHS. </td></tr>
-    <tr><td class="paramname">Ratio2</td><td>Unit value ratio type of RHS. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">lhs</td><td>Left-hand side of comparison. </td></tr>
-    <tr><td class="paramname">rhs</td><td>Right-hand side of comparison. </td></tr>
+    <tr><td class="paramname">d</td><td>Distance to multiply. </td></tr>
+    <tr><td class="paramname">s</td><td>Scalar value to multiply by. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>false, iff. distances are equal. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>New <code>distance</code> of length <code>d</code> * <code>s</code>. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="../../d2/dbf/metric_8h_source.html#l00538">538</a> of file <a class="el" href="../../d2/dbf/metric_8h_source.html">metric.h</a>.</p>
 
@@ -563,12 +562,12 @@ template&lt;typename Repr1 , typename Ratio1 , typename Repr2 &gt; </div>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">lhs</td><td>Left-hand side of comparison. </td></tr>
-    <tr><td class="paramname">rhs</td><td>Right-hand side of comparison. </td></tr>
+    <tr><td class="paramname">s</td><td>Scalar value to multiply by. </td></tr>
+    <tr><td class="paramname">d</td><td>Distance to multiply. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>false, iff. distances are equal. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>New <code>distance</code> of length <code>d</code> * <code>s</code>. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="../../d2/dbf/metric_8h_source.html#l00560">560</a> of file <a class="el" href="../../d2/dbf/metric_8h_source.html">metric.h</a>.</p>
 
@@ -627,9 +626,9 @@ template&lt;typename Repr1 , typename Ratio1 , typename Repr2 , typename Ratio2 
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>false, iff. distances are equal. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>New <code>distance</code> where length is LHS + RHS. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d2/dbf/metric_8h_source.html#l00499">499</a> of file <a class="el" href="../../d2/dbf/metric_8h_source.html">metric.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d2/dbf/metric_8h_source.html#l00500">500</a> of file <a class="el" href="../../d2/dbf/metric_8h_source.html">metric.h</a>.</p>
 
 </div>
 </div>
@@ -686,9 +685,9 @@ template&lt;typename Repr1 , typename Ratio1 , typename Repr2 , typename Ratio2 
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>false, iff. distances are equal. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>New <code>distance</code> of length LHS - RHS. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d2/dbf/metric_8h_source.html#l00517">517</a> of file <a class="el" href="../../d2/dbf/metric_8h_source.html">metric.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d2/dbf/metric_8h_source.html#l00518">518</a> of file <a class="el" href="../../d2/dbf/metric_8h_source.html">metric.h</a>.</p>
 
 </div>
 </div>
@@ -740,8 +739,8 @@ template&lt;typename Repr1 , typename Ratio , typename Repr2 &gt; </div>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">lhs</td><td>Left-hand side of division. </td></tr>
-    <tr><td class="paramname">rhs</td><td>Right-hand side of division. </td></tr>
+    <tr><td class="paramname">d</td><td>Distance to divide. </td></tr>
+    <tr><td class="paramname">s</td><td>Scalar value to divide <code>d</code> by. </td></tr>
   </table>
   </dd>
 </dl>
@@ -865,7 +864,7 @@ template&lt;typename Repr1 , typename Ratio1 , typename Repr2 , typename Ratio2 
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>true, iff. lhs &lt; rhs. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d2/dbf/metric_8h_source.html#l00429">429</a> of file <a class="el" href="../../d2/dbf/metric_8h_source.html">metric.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d2/dbf/metric_8h_source.html#l00430">430</a> of file <a class="el" href="../../d2/dbf/metric_8h_source.html">metric.h</a>.</p>
 
 </div>
 </div>
@@ -1239,7 +1238,7 @@ template&lt;typename Repr1 , typename Ratio1 , typename Repr2 , typename Ratio2 
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>true, iff. lhs &lt;= rhs. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d2/dbf/metric_8h_source.html#l00462">462</a> of file <a class="el" href="../../d2/dbf/metric_8h_source.html">metric.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d2/dbf/metric_8h_source.html#l00463">463</a> of file <a class="el" href="../../d2/dbf/metric_8h_source.html">metric.h</a>.</p>
 
 </div>
 </div>
@@ -1298,7 +1297,7 @@ template&lt;typename Repr1 , typename Ratio1 , typename Repr2 , typename Ratio2 
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>true, iff. distances are equal. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d2/dbf/metric_8h_source.html#l00379">379</a> of file <a class="el" href="../../d2/dbf/metric_8h_source.html">metric.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d2/dbf/metric_8h_source.html#l00380">380</a> of file <a class="el" href="../../d2/dbf/metric_8h_source.html">metric.h</a>.</p>
 
 </div>
 </div>
@@ -1357,7 +1356,7 @@ template&lt;typename Repr1 , typename Ratio1 , typename Repr2 , typename Ratio2 
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>true, iff. lhs &gt; rhs. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d2/dbf/metric_8h_source.html#l00445">445</a> of file <a class="el" href="../../d2/dbf/metric_8h_source.html">metric.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d2/dbf/metric_8h_source.html#l00446">446</a> of file <a class="el" href="../../d2/dbf/metric_8h_source.html">metric.h</a>.</p>
 
 </div>
 </div>
@@ -1416,7 +1415,7 @@ template&lt;typename Repr1 , typename Ratio1 , typename Repr2 , typename Ratio2 
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>true, iff. lhs &gt;= rhs. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d2/dbf/metric_8h_source.html#l00478">478</a> of file <a class="el" href="../../d2/dbf/metric_8h_source.html">metric.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d2/dbf/metric_8h_source.html#l00479">479</a> of file <a class="el" href="../../d2/dbf/metric_8h_source.html">metric.h</a>.</p>
 
 </div>
 </div>

@@ -28,10 +28,13 @@ var menudata={children:[
 {text:"Namespace Members",url:"namespacemembers.html",children:[
 {text:"All",url:"namespacemembers.html",children:[
 {text:"d",url:"namespacemembers.html#index_d"},
-{text:"o",url:"namespacemembers.html#index_o"}]},
+{text:"l",url:"namespacemembers.html#index_l"},
+{text:"o",url:"namespacemembers.html#index_o"},
+{text:"u",url:"namespacemembers.html#index_u"}]},
 {text:"Functions",url:"namespacemembers_func.html",children:[
 {text:"d",url:"namespacemembers_func.html#index_d"},
-{text:"o",url:"namespacemembers_func.html#index_o"}]}]}]},
+{text:"o",url:"namespacemembers_func.html#index_o"}]},
+{text:"Typedefs",url:"namespacemembers_type.html"}]}]},
 {text:"Classes",url:"annotated.html",children:[
 {text:"Class List",url:"annotated.html"},
 {text:"Class Index",url:"classes.html"},
